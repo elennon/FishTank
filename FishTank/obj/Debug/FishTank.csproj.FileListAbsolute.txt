@@ -1,0 +1,17 @@
+D:\temp\FishTank\FishTank\bin\Debug\FishTank.exe.config
+D:\temp\FishTank\FishTank\bin\Debug\FishTank.exe
+D:\temp\FishTank\FishTank\bin\Debug\FishTank.pdb
+D:\temp\FishTank\FishTank\bin\Debug\WPF.MDI.dll
+D:\temp\FishTank\FishTank\bin\Debug\WPF.MDI.pdb
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.csprojResolveAssemblyReference.cache
+D:\temp\FishTank\FishTank\obj\Debug\MainWindow.baml
+D:\temp\FishTank\FishTank\obj\Debug\MainWindow.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\App.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\FishTank_MarkupCompile.cache
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.g.resources
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.Properties.Resources.resources
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.csproj.GenerateResource.Cache
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.exe
+D:\temp\FishTank\FishTank\obj\Debug\FishTank.pdb
+D:\temp\FishTank\FishTank\obj\Debug\Controls\FishLevelOne.baml
+D:\temp\FishTank\FishTank\obj\Debug\Controls\FishLevelOne.g.cs

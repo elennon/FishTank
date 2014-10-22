@@ -1,0 +1,30 @@
+﻿<Window x:Class="FishTank.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mdi="clr-namespace:WPF.MDI;assembly=WPF.MDI"
+         Loaded="Window_Loaded"
+    Title="WPF.MDI Example" Height="362" Width="684" WindowState="Maximized">
+    <DockPanel>
+        <mdi:MdiContainer Name="Container">
+            <mdi:MdiContainer.Menu>
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="Play Game">
+                        <MenuItem Header="Level One" Click="AddWindow_Click" />
+                        <MenuItem Header="Level Two" Click="AddWindow_Click" />
+                        <MenuItem Header="Level Three" Click="AddWindow_Click" />
+                    </MenuItem>
+                    <MenuItem Header="Theme">
+                        <MenuItem Header="Generic" Name="Generic" ToolTip="Generic Visual Studio designer theme" Click="Generic_Click" />
+                        <MenuItem Header="Luna" Name="Luna" ToolTip="Blue Windows XP theme" Click="Luna_Click" />
+                        <MenuItem Header="Aero" Name="Aero" ToolTip="Windows Vista/7 theme"  Click="Aero_Click" />
+                    </MenuItem>
+                    <MenuItem Header="Windows" x:Name="WindowsMenu" x:FieldModifier="private" />
+                </Menu>
+            </mdi:MdiContainer.Menu>
+
+            <mdi:MdiChild Name="mdiFishTank" Title="Fish Tank" Position="20,15" Height="550" Width="625" >
+
+            </mdi:MdiChild>
+        </mdi:MdiContainer>
+    </DockPanel>
+</Window>
