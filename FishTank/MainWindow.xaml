@@ -1,4 +1,4 @@
-﻿<Window x:Class="FishTank.MainWindow"
+﻿<Window x:Class="FishTank.MainWindow" xmlns:my="clr-namespace:FishTank.Controls"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mdi="clr-namespace:WPF.MDI;assembly=WPF.MDI"
@@ -7,24 +7,30 @@
     <DockPanel>
         <mdi:MdiContainer Name="Container">
             <mdi:MdiContainer.Menu>
-                <Menu DockPanel.Dock="Top">
-                    <MenuItem Header="Play Game">
+                <Menu Name="MainMenu" DockPanel.Dock="Top" FontSize="18" BorderBrush="Beige" BorderThickness="2">
+                    <MenuItem Header="Play Game" Margin="20,0,0,0">
+                        <MenuItem Header="Game Rules" Click="AddRules_Click" />
                         <MenuItem Header="Level One" Click="AddWindow_Click" />
-                        <MenuItem Header="Level Two" Click="AddWindow_Click" />
-                        <MenuItem Header="Level Three" Click="AddWindow_Click" />
+                        <MenuItem Header="Level Two" Click="AddLevel2_Click" />
                     </MenuItem>
-                    <MenuItem Header="Theme">
-                        <MenuItem Header="Generic" Name="Generic" ToolTip="Generic Visual Studio designer theme" Click="Generic_Click" />
-                        <MenuItem Header="Luna" Name="Luna" ToolTip="Blue Windows XP theme" Click="Luna_Click" />
-                        <MenuItem Header="Aero" Name="Aero" ToolTip="Windows Vista/7 theme"  Click="Aero_Click" />
+                    <MenuItem Header="Save">
+                        <MenuItem Header="Save" Name="Save" ToolTip="Save this game" Click="Save_Click" />                       
                     </MenuItem>
-                    <MenuItem Header="Windows" x:Name="WindowsMenu" x:FieldModifier="private" />
+
+                    <MenuItem Header="Open" x:Name="miOpen"  >
+                        
+                    </MenuItem>
+
+                    <MenuItem Header="Player:" Margin="200,0,0,0" Name="PlayerName" ></MenuItem>                   
                 </Menu>
             </mdi:MdiContainer.Menu>
 
             <mdi:MdiChild Name="mdiFishTank" Title="Fish Tank" Position="20,15" Height="550" Width="625" >
-
+                <my:FishLevelOne  x:Name="LevelOne" />                
             </mdi:MdiChild>
+                      
         </mdi:MdiContainer>
+        
     </DockPanel>
+    
 </Window>

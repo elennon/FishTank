@@ -13,13 +13,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace FishTank.Controls
 {
-    
-    public partial class FishLevelOne : UserControl
+
+    public partial class Level2 : UserControl
     {
         #region Variables
 
@@ -35,65 +36,27 @@ namespace FishTank.Controls
         private DispatcherTimer clock = new DispatcherTimer();
         private DispatcherTimer blueClock = new DispatcherTimer();
         private DispatcherTimer redClock = new DispatcherTimer();
+        private DispatcherTimer redClock2 = new DispatcherTimer();
         private DispatcherTimer bubbleClock = new DispatcherTimer();
         private DispatcherTimer counterClock = new DispatcherTimer();
 
-        public bool up = true, OKDrop = false, left = true, leftBlue = false, leftRed = true, isOpedFromSavedGame = false;
-        public double tp = 0.0, fromTop = 45, SpeedUp = 0.0;
-        public double fromLeftBlue = 0.0, fromTopBlue = 110;
-        public double tpRed = 200.0, fromTopRed = 230;
+        public bool up = true, OKDrop = false, left = true, leftBlue = false, leftRed = true, leftRed2 = false, isOpedFromSavedGame = false;
+        public double tp = 0.0, fromTop = 145, SpeedUp = 0.0;
+        public double fromLeftBlue = 0.0, fromTopBlue = 210;
+        public double tpRed = 200.0, fromTopRed = 330, tpRed2 = 80.0, fromTopRed2 = 80;
         public double bub1Top = 0.0, bub2Top = 0.0, bub3Top = 0.0;
         public int speedCount = 0, bubbleCount = 0, ctr = 0, timerCount = 10, caughtFishCount = 0;
         private System.Windows.Controls.Image caughtFish;
         private System.Windows.Point mousePosition;
+        private string score = "0";
 
         #endregion
 
-        #region DependencyProperty variables
-
-        public static readonly DependencyProperty highestScore =
-        DependencyProperty.Register("Score", typeof(string), typeof(FishLevelOne), new PropertyMetadata("0"));
-
-        public string Score
-        {
-            get { return (string)GetValue(highestScore); }
-            set { SetValue(highestScore, value); }
-        }
-
-        public static readonly DependencyProperty _greenFish =
-        DependencyProperty.Register("greenFish", typeof(Fish), typeof(FishLevelOne), new PropertyMetadata(new Fish()));
-
-        public Fish greenFish
-        {
-            get { return (Fish)GetValue(_greenFish); }
-            set { SetValue(_greenFish, value); }
-        }
-
-        public static readonly DependencyProperty _blueFish =
-        DependencyProperty.Register("blueFish", typeof(Fish), typeof(FishLevelOne), new PropertyMetadata(new Fish()));
-
-        public Fish blueFish
-        {
-            get { return (Fish)GetValue(_blueFish); }
-            set { SetValue(_blueFish, value); }
-        }
-
-        public static readonly DependencyProperty _redFish =
-        DependencyProperty.Register("redFish", typeof(Fish), typeof(FishLevelOne), new PropertyMetadata(new Fish()));
-
-        public Fish redFish
-        {
-            get { return (Fish)GetValue(_redFish); }
-            set { SetValue(_redFish, value); }
-        }
-
-        #endregion
-
-
-        public FishLevelOne()
+      
+        public Level2()
         {
             InitializeComponent();
-            
+
             leftPics = GetPics("GrnLeft.png", 20);
             rightPics = GetPics("GrnRight.png", 20);
 
@@ -104,46 +67,44 @@ namespace FishTank.Controls
             RedRightPics = GetPics("RedRight.png", 20);
         }
 
-        public void Window_Loaded(object sender, RoutedEventArgs e)   
+        public void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
             ImageBrush imageBrush = new ImageBrush();
             imageBrush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/space.jpg"));
             cnvFishTank.Background = imageBrush;
             Canvas.SetTop(imgCountDown, cnvFishTank.ActualHeight / 3.5);
-            Canvas.SetLeft(imgCountDown, cnvFishTank.ActualWidth * 1.2);
+            Canvas.SetLeft(imgCountDown, cnvFishTank.ActualWidth * 1.05);
 
             Canvas.SetTop(imgLose, cnvFishTank.ActualHeight / 3.5);
-            Canvas.SetLeft(imgLose, cnvFishTank.ActualWidth * 1.1);
- 
+            Canvas.SetLeft(imgLose, cnvFishTank.ActualWidth * 0.9);
+
             PrepPics();
             imgBubble1.Visibility = Visibility.Hidden;
             imgBubble2.Visibility = Visibility.Hidden;
             imgBubble3.Visibility = Visibility.Hidden;
             clock.Interval = new System.TimeSpan(0, 0, 0, 0, 50);
-            clock.Tick += clock_Tick;           
-            
+            clock.Tick += clock_Tick;
+
 
             blueClock.Interval = new System.TimeSpan(0, 0, 0, 0, 50);
             blueClock.Tick += blueClock_Tick;
             fromLeftBlue = cnvFishTank.ActualWidth - 55;
 
             redClock.Interval = new System.TimeSpan(0, 0, 0, 0, 36);
-            redClock.Tick += redClock_Tick;            
-            
+            redClock.Tick += redClock_Tick;
+
+            redClock2.Interval = new System.TimeSpan(0, 0, 0, 0, 36);
+            redClock2.Tick += redClock2_Tick;
 
             bubbleClock.Interval = new System.TimeSpan(0, 0, 0, 0, 50);
             bubbleClock.Tick += bubbleClock_Tick;
 
             counterClock.Interval = new System.TimeSpan(0, 0, 0, 1);
             counterClock.Tick += counterClock_Tick;
-
-            if (isOpedFromSavedGame) 
-            { 
-                setFisToOriginalPositions(); 
-            }
-            else { setFish(); }
-        }      
+            setFish();
+            
+        }
 
         #region Clock tick Events
 
@@ -162,6 +123,66 @@ namespace FishTank.Controls
                 blueClock.Stop();
                 clock.Stop();
                 counterClock.Stop();
+            }
+        }
+
+        void redClock2_Tick(object sender, EventArgs e)
+        {
+            if (leftRed2)
+            {
+                if (SpeedUp > tpRed2)
+                {
+                    speedCount++;
+                    Duration duration = new Duration(TimeSpan.FromSeconds(0.01));
+                    da.Duration = duration;
+                    redClock2.Interval = new System.TimeSpan(0, 0, 0, 0, 1);
+                }
+                else
+                {
+                    Duration duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    da.Duration = duration;
+                    redClock2.Interval = new System.TimeSpan(0, 0, 0, 0, 40);
+                }
+            }
+            else
+            {
+                if (SpeedUp > 0 && tpRed2 > SpeedUp)
+                {
+                    speedCount++;
+                    Duration duration = new Duration(TimeSpan.FromSeconds(0.01));
+                    da.Duration = duration;
+                    redClock2.Interval = new System.TimeSpan(0, 0, 0, 0, 1);
+                }
+                else
+                {
+                    Duration duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    da.Duration = duration;
+                    redClock2.Interval = new System.TimeSpan(0, 0, 0, 0, 40);
+                }
+            }
+            if (speedCount > 40) { SpeedUp = 0.0; }
+
+            fromTopRed2 = Canvas.GetTop(redFishImage2);
+            tpRed2 = Canvas.GetLeft(redFishImage2);
+
+            //double wl = Canvas.ActualHeightProperty(fishImage);
+            if (leftRed2)
+            {
+                tpRed2 += 5;
+            }
+            else tpRed2 -= 5;
+
+            Canvas.SetTop(redFishImage2, fromTopRed2);
+            Canvas.SetLeft(redFishImage2, tpRed2);
+
+            double widthCanvas = cnvFishTank.ActualWidth - greenFishImage.ActualWidth;
+            if (tpRed2 >= widthCanvas)
+            {
+                leftRed2 = false;
+            }
+            else if (tpRed2 < 3.0)
+            {
+                leftRed2 = true;
             }
         }
 
@@ -207,9 +228,9 @@ namespace FishTank.Controls
             //double wl = Canvas.ActualHeightProperty(fishImage);
             if (leftRed)
             {
-                tpRed += 3;
+                tpRed += 5;
             }
-            else tpRed -= 3;
+            else tpRed -= 5;
 
             Canvas.SetTop(redFishImage, fromTopRed);
             Canvas.SetLeft(redFishImage, tpRed);
@@ -266,9 +287,9 @@ namespace FishTank.Controls
 
             if (leftBlue)
             {
-                fromLeftBlue += 3;
+                fromLeftBlue += 5;
             }
-            else fromLeftBlue -= 3;
+            else fromLeftBlue -= 5;
 
             Canvas.SetTop(blueFishImage, fromTopBlue);
             Canvas.SetLeft(blueFishImage, fromLeftBlue);
@@ -326,7 +347,7 @@ namespace FishTank.Controls
             //double wl = Canvas.ActualHeightProperty(fishImage);
             if (left)
             {
-                tp += 3;
+                tp += 5;
                 //if (up) { mrg += 2; }
                 //else { mrg -= 2; }
 
@@ -334,7 +355,7 @@ namespace FishTank.Controls
                 //if (mrg < 75 && !up) { up = true; }           
                 //fishImage.Margin = new Thickness(0, mrg, 0, 0);
             }
-            else tp -= 3;
+            else tp -= 5;
 
             Canvas.SetTop(greenFishImage, fromTop);
             Canvas.SetLeft(greenFishImage, tp);
@@ -354,7 +375,7 @@ namespace FishTank.Controls
         {
             KeyValuePair<string, System.Windows.Point> kp = (KeyValuePair<string, System.Windows.Point>)bubbleClock.Tag;
             System.Windows.Point pnt = kp.Value;
-        
+
             switch (kp.Key)
             {
                 case "greenFishImage":
@@ -375,9 +396,9 @@ namespace FishTank.Controls
                     pnt.Y = pnt.Y + 20;
                     bubbleGo(pnt);
                     break;
-	            default:
-	                break;
-            }            
+                default:
+                    break;
+            }
         }
 
         private void bubbleGo(System.Windows.Point pnt)
@@ -441,70 +462,23 @@ namespace FishTank.Controls
 
         #region setting up
 
-        public void setFisToOriginalPositions()
-        {
-            double BowlTop = 375;// Canvas.GetLeft(imgBowl);
-            double bowlLeft = 561;// Canvas.GetTop(imgBowl);
-
-            if(greenFish.Caught)
-            {             
-                Canvas.SetTop(greenFishImage, BowlTop + 5);
-                Canvas.SetLeft(greenFishImage, bowlLeft + 5);
-                Panel.SetZIndex(greenFishImage, 1);
-            }
-            else
-            {
-                Canvas.SetTop(greenFishImage, fromTop);
-                clock.Start();
-            }
-
-            if (blueFish.Caught)
-            {
-                
-                Canvas.SetTop(blueFishImage, BowlTop + 5);
-                Canvas.SetLeft(blueFishImage, bowlLeft + 5);
-                Panel.SetZIndex(blueFishImage, 1);
-            }
-            else
-            {
-                Canvas.SetTop(blueFishImage, fromTopBlue);
-                Canvas.SetLeft(blueFishImage, fromLeftBlue);
-                blueClock.Start();
-            }
-
-            if (redFish.Caught)
-            {
-                Canvas.SetTop(redFishImage, BowlTop);
-                Canvas.SetLeft(redFishImage, bowlLeft);
-                Panel.SetZIndex(redFishImage, 1);
-            }
-            else
-            {
-                Canvas.SetTop(redFishImage, fromTopRed);
-                Canvas.SetLeft(redFishImage, tpRed);
-                redClock.Start();
-            }           
-        }
-
         public void setFish()
         {
-            greenFish.Colour = "green";
-            greenFish.Name = "greenFish";
-            greenFish.Caught = false;
-            blueFish.Colour = "blue";
-            blueFish.Name = "blueFish";
-            blueFish.Caught = false;
-            redFish.Colour = "red";
-            redFish.Name = "redFish";
-            redFish.Caught = false;
+            if (cnvFishTank.Children.Contains(greenFishImage) == false) { cnvFishTank.Children.Add(greenFishImage); }
+            if (cnvFishTank.Children.Contains(blueFishImage) == false) { cnvFishTank.Children.Add(blueFishImage); }
+            if (cnvFishTank.Children.Contains(redFishImage) == false) { cnvFishTank.Children.Add(redFishImage); }
+            if (cnvFishTank.Children.Contains(redFishImage2) == false) { cnvFishTank.Children.Add(redFishImage2); }
             
             Canvas.SetTop(greenFishImage, fromTop);
             Canvas.SetTop(blueFishImage, fromTopBlue);
             Canvas.SetLeft(blueFishImage, fromLeftBlue);
             Canvas.SetTop(redFishImage, fromTopRed);
             Canvas.SetLeft(redFishImage, tpRed);
+            Canvas.SetTop(redFishImage2, fromTopRed2);
+            Canvas.SetLeft(redFishImage2, tpRed2);
             clock.Start();
             redClock.Start();
+            redClock2.Start();
             blueClock.Start();
         }
 
@@ -519,8 +493,8 @@ namespace FishTank.Controls
             Canvas.SetLeft(redFishImage, tpRed);
             Canvas.SetTop(redFishImage, fromTopRed);
 
-            Canvas.SetTop(imgBowl, cnvFishTank.ActualHeight - imgBowl.ActualHeight);
-            Canvas.SetLeft(imgBowl, cnvFishTank.ActualWidth - imgBowl.ActualWidth);
+            Canvas.SetTop(bowlGrid, cnvFishTank.ActualHeight - imgBowl.ActualHeight);
+            Canvas.SetLeft(bowlGrid, (cnvFishTank.ActualWidth / 2) + (imgBowl.ActualWidth / 6) );
         }
 
         private void DoubleAnimation_Completed(object sender, EventArgs e)
@@ -538,6 +512,15 @@ namespace FishTank.Controls
             else
             {
                 greenFishImage.Source = leftPics[ctr];
+            }
+
+            if (leftRed2)
+            {
+                redFishImage2.Source = RedRightPics[ctr];
+            }
+            else
+            {
+                redFishImage2.Source = RedLeftPics[ctr];
             }
 
             if (leftRed)
@@ -614,16 +597,16 @@ namespace FishTank.Controls
             if (left) SpeedUp = tp + 36;
             else { SpeedUp = tp - 36; }
             var position = new KeyValuePair<string, System.Windows.Point>();
-            position =(new KeyValuePair<string, System.Windows.Point>( image.Name, pnt));
+            position = (new KeyValuePair<string, System.Windows.Point>(image.Name, pnt));
             bubbleClock.Tag = position;
             bubbleCount = 0;
             bubbleClock.Start();
         }
 
         private void fishImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {         
+        {
             var image = e.Source as System.Windows.Controls.Image;
-              
+
             if (image != null && cnvFishTank.CaptureMouse())
             {
                 switch (image.Name)
@@ -644,97 +627,40 @@ namespace FishTank.Controls
 
                 mousePosition = e.GetPosition(cnvFishTank);
                 caughtFish = image;
-               
+
                 Panel.SetZIndex(caughtFish, 1);
-                //DragDrop.DoDragDrop(image, image, DragDropEffects.None);
+                DataObject dragData = new DataObject("Format", image);
+                DragDrop.DoDragDrop(image, dragData, DragDropEffects.Move);             
             }
         }
 
-        private void fishImage_MouseUp(object sender, MouseButtonEventArgs e)
+        private void bowlBorder_Drop(object sender, DragEventArgs e)
         {
-            if (caughtFish != null)
+            System.Windows.Controls.Image pic = e.Data.GetData("Format") as System.Windows.Controls.Image;
+            cnvFishTank.Children.Remove(pic);
+            caughtFishCount++;
+            bowlGrid.Children.Add(pic);
+            if(caughtFishCount == 4)
             {
-                caughtFishCount++;
-
-                setToCaught(caughtFish.Name);
-
-                cnvFishTank.ReleaseMouseCapture();
-                var position = e.GetPosition(cnvFishTank);
-                var offset = position - mousePosition;
-
-                double dd = Canvas.GetLeft(caughtFish) + offset.X;
-                double ty = Canvas.GetTop(caughtFish) + offset.Y;
-
-                Canvas.SetLeft(caughtFish, Canvas.GetLeft(caughtFish) + offset.X);
-                Canvas.SetTop(caughtFish, Canvas.GetTop(caughtFish) + offset.Y);
-                Panel.SetZIndex(caughtFish, 1);
-
-                double fishTot = (Canvas.GetLeft(caughtFish)) + (Canvas.GetTop(caughtFish));
-                double BowlTot = (Canvas.GetLeft(imgBowl)) + (Canvas.GetTop(imgBowl));
-                
-                if (fishTot < BowlTot)
-                {                    
-                    switch (caughtFish.Name)
-                    {
-                        case "greenFishImage":   
-                            clock.Start();
-                            break;
-                        case "blueFishImage":
-                            blueClock.Start();
-                            break;
-                        case "redFishImage":
-                            redClock.Start();
-                            break;
-                        default:
-                            break;
-                    }             
-                    bubbleCount = 0;
-                    bubbleClock.Start();
-                }
-                if(greenFish.Caught &&  blueFish.Caught && redFish.Caught)
+                counterClock.Stop();
+                if(score != null)
                 {
-                    counterClock.Stop();
-                    if(Score != null)
+                    if (Convert.ToInt32(score) < timerCount + 1)
                     {
-                        if (Convert.ToInt32(Score) < timerCount + 1)
-                        {
-                            Score = (timerCount + 1).ToString();
-                        }                       
-                    }                   
-                }
-                caughtFish = null;
+                        score = (timerCount + 1).ToString();
+                        tbkScoree.Text = score;
+                    }
+                    else { tbkScoree.Text = score; }  
+                }                   
             }
         }
 
-        private void fishImage_MouseMove(object sender, MouseEventArgs e)
+        private void DropList_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && caughtFish != null)
+            if (!e.Data.GetDataPresent("Format") )
             {
-                var position = e.GetPosition(cnvFishTank);
-                var offset = position - mousePosition;
-                mousePosition = position;
-
-                Canvas.SetLeft(caughtFish, Canvas.GetLeft(caughtFish) + offset.X);
-                Canvas.SetTop(caughtFish, Canvas.GetTop(caughtFish) + offset.Y);
+                e.Effects = DragDropEffects.None;
             }
-        }
-
-        private void setToCaught(string nme)
-        {
-            switch (nme)
-            {
-                case "greenFishImage":
-                    greenFish.Caught = true;
-                    break;
-                case "blueFishImage":
-                    blueFish.Caught = true;
-                    break;
-                case "redFishImage":
-                    redFish.Caught = true;
-                    break;
-                default:
-                    break;
-            }       
         }
 
         #endregion
@@ -745,6 +671,6 @@ namespace FishTank.Controls
             setFish();
             timerCount = 10;
             counterClock.Start();
-        }
+        }        
     }
 }

@@ -15,3 +15,11 @@ D:\temp\FishTank\FishTank\obj\Debug\FishTank.exe
 D:\temp\FishTank\FishTank\obj\Debug\FishTank.pdb
 D:\temp\FishTank\FishTank\obj\Debug\Controls\FishLevelOne.baml
 D:\temp\FishTank\FishTank\obj\Debug\Controls\FishLevelOne.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Rules.baml
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Rules.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Login.baml
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Login.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\temp\FishTank\FishTank\obj\Debug\FishTank_MarkupCompile.lref
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Level2.baml
+D:\temp\FishTank\FishTank\obj\Debug\Controls\Level2.g.cs

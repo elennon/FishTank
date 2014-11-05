@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Level="Level One">
+  <playerr>
+    <PlayerName>bop</PlayerName>
+    <HighestScore>0</HighestScore>
+    <fishes>
+      <Fish Name="greenFish">
+        <Colour>greeeen</Colour>
+        <Caught>false</Caught>
+      </Fish>
+      <Fish Name="blueFish">
+        <Colour>blue</Colour>
+        <Caught>true</Caught>
+      </Fish>
+      <Fish Name="redFish">
+        <Colour>red</Colour>
+        <Caught>false</Caught>
+      </Fish>
+    </fishes>
+  </playerr>
+</game>

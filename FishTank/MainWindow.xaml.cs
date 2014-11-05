@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 using WPF.MDI;
 
 namespace FishTank
@@ -24,87 +25,187 @@ namespace FishTank
     
     public partial class MainWindow : Window
     {
-       
+        public string player = "";
+
         public MainWindow()
 		{
 			InitializeComponent();
-			Container.Children.CollectionChanged += (o, e) => Menu_RefreshWindows();           
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            List<Player> players = getPlayers();
+            foreach (var item in players)
+            {
+                MenuItem mi = new MenuItem { Header = item.PlayerName, Tag= item.PlayerName };
+                mi.Click += Open_Click;
+                miOpen.Items.Add(mi);
+            }
+            
+
             mdiFishTank.Visibility = System.Windows.Visibility.Hidden;
+            if (Global.close == false)
+            {
+                Container.Children.Add(new MdiChild
+                {
+                    Title = "Player Login",
+                    Content = new Login(),
+                    Width = 514,
+                    Height = 534,
+                    Name = "nmeLogin"
+                });
+            }
+            else
+            {
+                player = Global.player;
+                PlayerName.Header = "Player:    " + Global.player;               
+            }
         }
 
-		#region Menu Events
+        private List<Player> getPlayers()
+        {
+            List<Player> players = new List<Player>(); 
+            DirectoryInfo dir = Directory.GetParent(Environment.CurrentDirectory);
+            string file = dir.FullName;
+            dir = Directory.GetParent(file);
+            file = string.Format(@"{0}\SavedGames.xml", dir);
+
+            XmlSerializer xs = new XmlSerializer(typeof(Games), new Type[] { typeof(Player), typeof(Fish) });
+
+            using (Stream str = File.OpenRead(file))
+            {
+                Games savedGame = (Games)xs.Deserialize(str);
+                if(savedGame != null)
+                {
+                    foreach (Player item in savedGame.players)
+                    {
+                        players.Add(item);
+                    }
+                }
+            }
+            return players;
+        }
+
+		#region Game Menu Events
+        private void AddRules_Click(object sender, RoutedEventArgs e)
+        {
+            Container.Children.Add(new MdiChild
+            {
+                Title = "Game Rules",
+                Content = new Rules(),
+                Width = 600,
+                Height = 550, Name = "LoginPg"
+                // Position = new System.Windows.Point(200, 30)
+            });
+        }
 
 		private void AddWindow_Click(object sender, RoutedEventArgs e)
 		{
+            player = Global.player;
             Container.Children.Add(new MdiChild
             {
                 Title = "Level One",
                 Content = new FishLevelOne(),
                 Width = 725,
-                Height = 550
+                Height = 550,
+                Name = "levelOne"
                // Position = new System.Windows.Point(200, 30)
             });
 		}
 
-		void Menu_RefreshWindows()
-		{
-			WindowsMenu.Items.Clear();
-			MenuItem mi;
-			for (int i = 0; i < Container.Children.Count; i++)
-			{
-				MdiChild child = Container.Children[i];
-				mi = new MenuItem { Header = child.Title };
-				mi.Click += (o, e) => child.Focus();
-				WindowsMenu.Items.Add(mi);
-			}
-			WindowsMenu.Items.Add(new Separator());
-			WindowsMenu.Items.Add(mi = new MenuItem { Header = "Cascade" });
-			mi.Click += (o, e) => Container.MdiLayout = MdiLayout.Cascade;
-			WindowsMenu.Items.Add(mi = new MenuItem { Header = "Horizontally" });
-			mi.Click += (o, e) => Container.MdiLayout = MdiLayout.TileHorizontal;
-			WindowsMenu.Items.Add(mi = new MenuItem { Header = "Vertically" });
-			mi.Click += (o, e) => Container.MdiLayout = MdiLayout.TileVertical;
+        private void AddLevel2_Click(object sender, RoutedEventArgs e)
+        {
+            player = Global.player;
+            Container.Children.Add(new MdiChild
+            {
+                Title = "Level One",
+                Content = new Level2(),
+                Width = 925,
+                Height = 650,
+                Name = "levelTwo"
+                // Position = new System.Windows.Point(200, 30)
+            });
+        }
 
-			WindowsMenu.Items.Add(new Separator());
-			WindowsMenu.Items.Add(mi = new MenuItem { Header = "Close all" });
-			mi.Click += (o, e) => Container.Children.Clear();
-		}
-
+		
 		#endregion
 
        
+        #region Save and Open Menu Events
 
-        #region Theme Menu Events
-
-        private void Generic_Click(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            Generic.IsChecked = true;
-            Luna.IsChecked = false;
-            Aero.IsChecked = false;
+            DirectoryInfo dir = Directory.GetParent(Environment.CurrentDirectory);
+            string file = dir.FullName;
+            dir = Directory.GetParent(file);
+            file = string.Format(@"{0}\SavedGames.xml", dir);
 
-            Container.Theme = ThemeType.Generic;
+            XmlSerializer xs = new XmlSerializer(typeof(Games), new Type[] { typeof(Player), typeof(Fish) });
+            Games savedGames = new Games();
+            using (Stream str = File.OpenRead(file))
+            {
+                savedGames = (Games)xs.Deserialize(str);
+                if (savedGames == null) { savedGames = new Games(); }   // incase xml fil is empty
+
+                var pl = savedGames.players.Where(a => a.PlayerName == player).FirstOrDefault();    // if player already there, clear for new record
+                if (pl != null) { savedGames.players.Remove(pl); }
+
+                Player playr = new Player { PlayerName = player, HighestScore = LevelOne.Score };
+                playr.fishes = new List<Fish> { LevelOne.greenFish, LevelOne.blueFish, LevelOne.redFish };
+                savedGames.players.Add(playr);
+            }
+
+            using (Stream str = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                xs.Serialize(str, savedGames);
+            }
+            MessageBox.Show("Game Saved");
         }
 
-        private void Luna_Click(object sender, RoutedEventArgs e)
+        private void Open_Click(object sender, RoutedEventArgs e)
         {
-            Generic.IsChecked = false;
-            Luna.IsChecked = true;
-            Aero.IsChecked = false;
+            MenuItem playerToOpen = (MenuItem)sender;
+            string platerName = playerToOpen.Tag.ToString();
+            Player playrr = new Player();
 
-            Container.Theme = ThemeType.Luna;
-        }
+            DirectoryInfo dir = Directory.GetParent(Environment.CurrentDirectory);
+            string file = dir.FullName;
+            dir = Directory.GetParent(file);
+            file = string.Format(@"{0}\SavedGames.xml", dir);
 
-        private void Aero_Click(object sender, RoutedEventArgs e)
-        {
-            Generic.IsChecked = false;
-            Luna.IsChecked = false;
-            Aero.IsChecked = true;
+            XmlSerializer xs = new XmlSerializer(typeof(Games), new Type[] { typeof(Player), typeof(Fish) });
 
-            Container.Theme = ThemeType.Aero;
+            using (Stream str = File.OpenRead(file))
+            {
+                Games savedGame = (Games)xs.Deserialize(str);
+                playrr = savedGame.players.Where(a => a.PlayerName == platerName).FirstOrDefault();
+            }
+
+            FishLevelOne fl1 = new FishLevelOne();
+            fl1.isOpedFromSavedGame = true;
+            foreach (var item in playrr.fishes)
+            {
+                switch (item.Colour)
+                {
+                    case "green":
+                        fl1.greenFish = item;
+                        break;
+                    case "blue":
+                        fl1.blueFish = item;
+                        break;
+                    case "red":
+                        fl1.redFish = item;
+                        break;                    
+                }             
+            }
+            Container.Children.Add(new MdiChild
+            {
+                Title = "Level One",
+                Content = fl1,
+                Width = 725,
+                Height = 550,
+                Name = "levelOne"               
+            });
         }
 
         #endregion
@@ -144,4 +245,6 @@ namespace FishTank
 
         
 	}
+
+    
 }

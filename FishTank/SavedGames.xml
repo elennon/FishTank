@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Level="Level One">
+  <fishes />
+  <players>
+    <Player>
+      <PlayerName>gij</PlayerName>
+      <HighestScore>0</HighestScore>
+      <fishes>
+        <Fish Name="greenFish">
+          <Colour>green</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="blueFish">
+          <Colour>blue</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="redFish">
+          <Colour>red</Colour>
+          <Caught>true</Caught>
+        </Fish>
+      </fishes>
+    </Player>
+    <Player>
+      <PlayerName>gim</PlayerName>
+      <HighestScore>0</HighestScore>
+      <fishes>
+        <Fish Name="greenFish">
+          <Colour>green</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="blueFish">
+          <Colour>blue</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="redFish">
+          <Colour>red</Colour>
+          <Caught>true</Caught>
+        </Fish>
+      </fishes>
+    </Player>
+    <Player>
+      <PlayerName>george</PlayerName>
+      <HighestScore>0</HighestScore>
+      <fishes>
+        <Fish Name="greenFish">
+          <Colour>green</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="blueFish">
+          <Colour>blue</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="redFish">
+          <Colour>red</Colour>
+          <Caught>true</Caught>
+        </Fish>
+      </fishes>
+    </Player>
+    <Player>
+      <PlayerName>mary</PlayerName>
+      <HighestScore>23</HighestScore>
+      <fishes>
+        <Fish Name="greenFish">
+          <Colour>green</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="blueFish">
+          <Colour>blue</Colour>
+          <Caught>true</Caught>
+        </Fish>
+        <Fish Name="redFish">
+          <Colour>red</Colour>
+          <Caught>true</Caught>
+        </Fish>
+      </fishes>
+    </Player>
+    <Player>
+      <PlayerName />
+      <HighestScore>0</HighestScore>
+      <fishes>
+        <Fish Name="greenFish">
+          <Colour>green</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="blueFish">
+          <Colour>blue</Colour>
+          <Caught>false</Caught>
+        </Fish>
+        <Fish Name="redFish">
+          <Colour>red</Colour>
+          <Caught>false</Caught>
+        </Fish>
+      </fishes>
+    </Player>
+  </players>
+</game>
